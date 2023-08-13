@@ -7,7 +7,9 @@
 
 <script>
 (() => {
-    const [,,, resource] = window.location.href.split('/')
+    const [,,, str] = window.location.href.split('/')
+    const [resource, ] = str.split('?') 
+
     const current = document.querySelector(`#${resource}-nav`)
     
     current.style.color = '#ddd'

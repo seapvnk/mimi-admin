@@ -55,8 +55,9 @@ class TimelinesController < ApplicationController
     def branch_timeline
       worlds = World
         .where(timeline_id: @timeline.parent_id)
-        .select(:name, :description).map do |world|
+        .select(:name, :description, :signature).map do |world|
           world.timeline = @timeline
+          world.set_signature(world.signature)
           world.as_json
         end
 

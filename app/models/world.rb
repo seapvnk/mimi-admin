@@ -1,11 +1,11 @@
 class World < ApplicationRecord
     belongs_to :timeline
 
-    before_create :generate_signature_uuid
+    def set_signature(signature = nil)
+        if signature.nil?
+            signature = SecureRandom.uuid
+        end
 
-    private
-
-    def generate_signature_uuid
-        self.signature = SecureRandom.uuid
+        self.signature = signature
     end
 end

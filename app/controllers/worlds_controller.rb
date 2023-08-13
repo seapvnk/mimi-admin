@@ -4,17 +4,12 @@ class WorldsController < ApplicationController
 
   # GET /worlds or /worlds.json
   def index
-    if params[:timeline_id].present?
+    if timeline_id.present?
       @worlds = World
-        .where(timeline_id: params[:timeline_id])
-        .distinct(:signature)
-        .group(:signature)
-        .order(created_at: :desc)
+        .where(id: World.group(:signature).maximum(:id).values)
+        .where(timeline_id: timeline_id)
     else
-      @worlds = World
-        .distinct(:signature)
-        .group(:signature)
-        .order(created_at: :desc)
+      @worlds = World.where(id: World.group(:signature).maximum(:id).values)
     end
   end
 
@@ -34,6 +29,7 @@ class WorldsController < ApplicationController
   # POST /worlds or /worlds.json
   def create
     @world = World.new(world_params)
+    @world.set_signature
 
     if @world.save
       respond_to do |format|
@@ -52,7 +48,7 @@ class WorldsController < ApplicationController
   def update
     respond_to do |format|
       world = World.new(world_params)
-      world.signature = @world.signature
+      world.set_signature(@world.signature)
       @world = world
 
       if @world.save
@@ -89,5 +85,9 @@ class WorldsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def world_params
       params.require(:world).permit(:name, :description, :timeline_id)
+    end
+
+    def timeline_id
+      params[:timeline_id]
     end
 end
