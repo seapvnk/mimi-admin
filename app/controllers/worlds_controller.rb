@@ -1,10 +1,21 @@
 class WorldsController < ApplicationController
   before_action :set_world, only: %i[ show edit update destroy ]
-  before_action :set_timelines, only: %i[ new edit ] 
+  before_action :set_timelines, only: %i[ index new edit create ] 
 
   # GET /worlds or /worlds.json
   def index
-    @worlds = World.all
+    if params[:timeline_id].present?
+      @worlds = World
+        .where(timeline_id: params[:timeline_id])
+        .distinct(:signature)
+        .group(:signature)
+        .order(created_at: :desc)
+    else
+      @worlds = World
+        .distinct(:signature)
+        .group(:signature)
+        .order(created_at: :desc)
+    end
   end
 
   # GET /worlds/1 or /worlds/1.json
@@ -40,7 +51,11 @@ class WorldsController < ApplicationController
   # PATCH/PUT /worlds/1 or /worlds/1.json
   def update
     respond_to do |format|
-      if @world.update(world_params)
+      world = World.new(world_params)
+      world.signature = @world.signature
+      @world = world
+
+      if @world.save
         format.html { redirect_to world_url(@world), notice: "World was successfully updated." }
         format.json { render :show, status: :ok, location: @world }
       else
@@ -66,6 +81,7 @@ class WorldsController < ApplicationController
       @world = World.find(params[:id])
     end
 
+    # Use callbacks to share common setup or constraints between actions.
     def set_timelines
       @timelines = Timeline.all
     end

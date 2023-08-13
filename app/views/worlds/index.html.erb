@@ -2,6 +2,15 @@
 
 <h1>Worlds</h1>
 
+<%= form_tag worlds_path, method: :get do %>
+  <%= label_tag :timeline_id, "Filter by Timeline:" %>
+  <div style="display: flex">
+    <%= select_tag :timeline_id, options_for_select(@timelines.pluck(:id), params[:timeline_id]), include_blank: 'None' %>
+    <%= submit_tag "Filter" %>
+  </div>
+<% end %>
+
+
 <div id="worlds">
   <% @worlds.each do |world| %>
     <%= render world %>
