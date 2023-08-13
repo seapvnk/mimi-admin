@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @world %>
+
+<div>
+  <%= link_to "Edit this world", edit_world_path(@world) %> |
+  <%= link_to "Back to worlds", worlds_path %>
+
+  <%= button_to "Destroy this world", @world, method: :delete %>
+</div>

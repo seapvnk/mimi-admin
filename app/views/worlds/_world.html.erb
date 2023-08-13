@@ -1,0 +1,19 @@
+<div id="<%= dom_id world %>">
+  <p>
+    <strong>Name:</strong>
+    <%= world.name %>
+  </p>
+
+  <p>
+    <strong>Description:</strong>
+    <%= world.description %>
+  </p>
+
+  <% unless world.timeline_id.nil? %>
+    <p>
+      <strong>timeline: </strong>
+      <%= world.timeline_id.to_s.rjust(6, "0") %>
+    </p>
+  <% end %>
+
+</div>

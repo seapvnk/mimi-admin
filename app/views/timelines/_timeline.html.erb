@@ -1,0 +1,13 @@
+<div id="<%= dom_id timeline %>">
+  <p>
+    <strong>#</strong>
+    <%= timeline.id.to_s.rjust(6, "0") %>
+  </p>
+
+  <% unless timeline.parent_id.nil? %>
+    <p>
+      <strong>parent: </strong>
+      <%= timeline.parent_id.to_s.rjust(6, "0") %>
+    </p>
+  <% end %>
+</div>

@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Worlds</h1>
+
+<div id="worlds">
+  <% @worlds.each do |world| %>
+    <%= render world %>
+    <p>
+      <%= link_to "Show this world", world %>
+    </p>
+
+    <hr>
+  <% end %>
+</div>
+
+<%= link_to "New world", new_world_path %>

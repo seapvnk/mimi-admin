@@ -1,0 +1,16 @@
+<aside style="margin-top: 1em;">
+    <%= link_to "Timelines", :timelines, id: "timelines-nav" %>
+    <span style="margin: 0 5px"> | </span>
+    <%= link_to "Worlds", :worlds, id: "worlds-nav" %>
+    <hr>
+</aside>
+
+<script>
+(() => {
+    const [,,, resource] = window.location.href.split('/')
+    const current = document.querySelector(`#${resource}-nav`)
+    
+    current.style.color = '#ddd'
+    current.style.fontWeight = 'bold'
+})()
+</script>
