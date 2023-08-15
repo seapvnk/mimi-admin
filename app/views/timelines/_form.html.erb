@@ -15,6 +15,12 @@
     <%= form.label :parent_id, style: "display: block" %>
     <%= form.collection_select :parent_id, @timelines, :id, :id, prompt: "Select a parent timeline" %>
   </div>
+
+  <div>
+    <%= form.label :start_date, style: "display: block" %>
+    <%= form.date_field :start_date %>
+  </div>
+
   <br>
 
   <div>

@@ -1,0 +1,10 @@
+<h1>Editing map</h1>
+
+<%= render "form", map: @map %>
+
+<br>
+
+<div>
+  <%= link_to "Edit this map", world_map_path(@world, @map) %> |
+  <%= link_to "Back to maps", world_maps_path(@world) %>
+</div>

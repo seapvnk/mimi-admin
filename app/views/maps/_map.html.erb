@@ -1,0 +1,63 @@
+<div id="<%= dom_id map %>">
+  <p>
+    <strong>Name:</strong>
+    <%= map.name %>
+  </p>
+
+  <p>
+    <strong>Description:</strong>
+    <%= map.description %>
+  </p>
+
+  <div style="display: none" id="imgs-<%= map.id %>">
+    <strong>Images:</strong>
+    <%= image_tag map.background if map.background.attached? %>
+    <%= image_tag map.foreground if map.foreground.attached? %>
+    <%= image_tag map.collision_mask if map.collision_mask.attached? %>
+  </div>
+
+  <p>
+    <strong>World:</strong>
+    <%= map.world_id %>
+  </p>
+
+</div>
+
+<canvas id="map-<%= map.id %>"></canvas>
+
+<script>
+(() => {
+  const [sBackground, sForeground, sCollisionMask] = 
+    document.querySelectorAll('#imgs-<%= map.id %> > img');
+
+  sBackground.onload = () => {
+    sForeground.onload = () => {
+      sCollisionMask.onload = () => {
+        const canvas = document.querySelector('#map-<%= map.id %>');
+
+        const { width, height } = sBackground;
+      
+        canvas.width = width;
+        canvas.height = height;
+      
+        const ctx = canvas.getContext('2d');
+
+        const render = canShowCollisionOnMap => {
+          ctx.drawImage(sBackground, 0, 0);
+          ctx.drawImage(sForeground, 0, 0);
+
+          if (canShowCollisionOnMap) {
+            ctx.drawImage(sCollisionMask, 0, 0);
+          }
+        }
+
+        render();
+        
+        canvas.onmouseenter = () => render(true);
+        canvas.onmouseleave = () => render(false);
+      }
+    }
+  }
+})();
+
+</script>

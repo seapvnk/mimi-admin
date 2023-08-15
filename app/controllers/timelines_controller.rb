@@ -66,6 +66,6 @@ class TimelinesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def timeline_params
-      params.require(:timeline).permit(:parent_id)
+      params.require(:timeline).permit(:parent_id, :start_date)
     end
 end

@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @map %>
+
+<div>
+  <%= link_to "Edit this map", edit_world_map_path(@world, @map) %> |
+  <%= link_to "Back to maps", world_maps_path(@world) %>
+
+  <%= button_to "Destroy this map", world_map_path(@world, @map), method: :delete %>
+</div>

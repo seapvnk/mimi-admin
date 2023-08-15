@@ -4,7 +4,8 @@
 
 <div>
   <%= link_to "Edit this world", edit_world_path(@world) %> |
-  <%= link_to "Back to worlds", worlds_path %>
+  <%= link_to "Back to worlds", worlds_path %> |
+  <%= link_to "Show maps", world_maps_path(@world) %>
 
   <%= button_to "Destroy this world", @world, method: :delete %>
 </div>

@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Maps</h1>
+
+<div id="maps">
+  <% @maps.each do |map| %>
+    <%= render map %>
+    <p>
+      <%= link_to "Show this map", world_map_path(@world, map) %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New map", new_world_map_path %>
