@@ -1,5 +1,4 @@
-<%= form_with(model: @map, url: world_map_path(@world, @map)) do |form| %>
-  <% if map.errors.any? %>
+<%= form_with(model: map, url: map.new_record? ? world_maps_path(world, map) : "#{world_maps_path(world)}/#{map.id}") do |form| %>  <% if map.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(map.errors.count, "error") %> prohibited this map from being saved:</h2>
 

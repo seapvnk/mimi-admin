@@ -1,10 +1,12 @@
 class MapsController < ApplicationController
   before_action :set_map, only: %i[ show edit update destroy ]
-  before_action :set_world, only: %i[ show create edit new update index ]
+  before_action :set_world, only: %i[ show create edit new update index destroy ]
 
   # GET /maps or /maps.json
   def index
-    @maps = Map.where(id: Map.group(:signature).maximum(:id).values)
+    @maps = Map
+      .where(id: Map.with_deleted.group(:signature).maximum(:id).values)
+      .order(created_at: :desc)
   end
 
   # GET /maps/1 or /maps/1.json
@@ -41,22 +43,29 @@ class MapsController < ApplicationController
     map = Map.new(map_params.except(:background, :foreground, :collision_mask))
     map.set_signature(@map.signature)
     
-    @map = map
 
     if map_params[:background].present?
-      @map.background.attach(map_params[:background])
+      map.background.attach(map_params[:background])
+    else
+      map.background = @map.background.blob
     end
 
     if map_params[:foreground].present?
-      @map.foreground.attach(map_params[:foreground])
+      map.foreground.attach(map_params[:foreground])
+    else
+      map.foreground = @map.foreground.blob
     end
 
     if map_params[:collision_mask].present?
-      @map.collision_mask.attach(map_params[:collision_mask])
+      map.collision_mask.attach(map_params[:collision_mask])
+    else
+      map.collision_mask = @map.collision_mask.blob
     end
+    
+    @map = map
 
     respond_to do |format|
-      if @map.update(map_params)
+      if @map.save
         format.html { redirect_to world_map_path(@world, @map), notice: "Map was successfully updated." }
         format.json { render :show, status: :ok, location: @map }
       else
@@ -71,7 +80,7 @@ class MapsController < ApplicationController
     @map.destroy
 
     respond_to do |format|
-      format.html { redirect_to worlds_maps_url(@world), notice: "Map was successfully destroyed." }
+      format.html { redirect_to world_maps_url(@world), notice: "Map was successfully destroyed." }
       format.json { head :no_content }
     end
   end
