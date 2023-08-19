@@ -22,15 +22,10 @@ class TimelinesController < ApplicationController
   # POST /timelines or /timelines.json
   def create
     @timeline = Timeline.new(timeline_params)
-
-    success = false
-    ActiveRecord::Base.transaction do
-      success = @timeline.save
-      branch_timeline unless @timeline.parent_id.nil?
-    end
+    branch_timeline if @timeline.parent_id.present?
 
     respond_to do |format|
-      if success
+      if @timeline.save
         format.html { redirect_to timelines_path, notice: "Timeline was successfully created." }
         format.json { render :show, status: :created, location: @timeline }
       else
@@ -53,15 +48,11 @@ class TimelinesController < ApplicationController
 
     # Clone elements from timelines
     def branch_timeline
-      worlds = World
-        .where(timeline_id: @timeline.parent_id)
-        .select(:name, :description, :signature).map do |world|
-          world.timeline = @timeline
-          world.set_signature(world.signature)
-          world.as_json
-        end
-
-      World.create!(worlds)
+      parent = Timeline.find(@timeline.parent_id)
+      
+      branch = parent.branch
+      branch.start_date = @timeline.start_date
+      @timeline = branch
     end
 
     # Only allow a list of trusted parameters through.

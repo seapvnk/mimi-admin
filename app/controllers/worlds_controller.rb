@@ -28,8 +28,7 @@ class WorldsController < ApplicationController
 
   # POST /worlds or /worlds.json
   def create
-    @world = World.new(world_params)
-    @world.set_signature
+    @world = WorldService.create(world_params)
 
     if @world.save
       respond_to do |format|
@@ -47,11 +46,9 @@ class WorldsController < ApplicationController
   # PATCH/PUT /worlds/1 or /worlds/1.json
   def update
     respond_to do |format|
-      world = World.new(world_params)
-      world.set_signature(@world.signature)
-      @world = world
+      @world = WorldService.update(@world, world_params)
 
-      if @world.save
+      if @world
         format.html { redirect_to world_url(@world), notice: "World was successfully updated." }
         format.json { render :show, status: :ok, location: @world }
       else

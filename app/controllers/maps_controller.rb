@@ -6,6 +6,7 @@ class MapsController < ApplicationController
   def index
     @maps = Map
       .where(id: Map.with_deleted.group(:signature).maximum(:id).values)
+      .where(world_id: @world.id)
       .order(created_at: :desc)
   end
 
@@ -24,11 +25,10 @@ class MapsController < ApplicationController
 
   # POST /maps or /maps.json
   def create
-    @map = Map.new(map_params)
-    @map.set_signature
+    @map = MapService.create(map_params)
 
     respond_to do |format|
-      if @map.save
+      if @map
         format.html { redirect_to world_map_path(@world, @map), notice: "Map was successfully created." }
         format.json { render :show, status: :created, location: @map }
       else
@@ -40,32 +40,10 @@ class MapsController < ApplicationController
 
   # PATCH/PUT /maps/1 or /maps/1.json
   def update
-    map = Map.new(map_params.except(:background, :foreground, :collision_mask))
-    map.set_signature(@map.signature)
-    
-
-    if map_params[:background].present?
-      map.background.attach(map_params[:background])
-    else
-      map.background = @map.background.blob
-    end
-
-    if map_params[:foreground].present?
-      map.foreground.attach(map_params[:foreground])
-    else
-      map.foreground = @map.foreground.blob
-    end
-
-    if map_params[:collision_mask].present?
-      map.collision_mask.attach(map_params[:collision_mask])
-    else
-      map.collision_mask = @map.collision_mask.blob
-    end
-    
-    @map = map
+    @map = MapService.update(@map, map_params)
 
     respond_to do |format|
-      if @map.save
+      if @map
         format.html { redirect_to world_map_path(@world, @map), notice: "Map was successfully updated." }
         format.json { render :show, status: :ok, location: @map }
       else
