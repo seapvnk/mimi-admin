@@ -47,6 +47,8 @@ gem "bootsnap", require: false
 
 gem "paranoia"
 
+gem "rack-cors"
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
